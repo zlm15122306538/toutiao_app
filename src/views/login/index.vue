@@ -15,7 +15,7 @@
           :show-error-message="false"
           :validate-first="true"
           ref="login-form"
-        >·
+        >
         <van-field
           v-model="user.mobile"
           name="mobile"
@@ -68,7 +68,7 @@
 <script>
 import { login, sendSms } from '../../api/user'
 export default {
-  name: 'login_index',
+  name: 'LoginIndex',
   data () {
     return {
       user: {
@@ -91,38 +91,29 @@ export default {
   },
   methods: {
     async onLogin () {
-      /* this.$toast.loading({
+      this.$toast.loading({
         duration: 0, // 持续时间，0表示持续展示不停止
         forbidClick: true, // 是否禁止背景点击
         message: '登录中...' // 提示消息
-      }) */
+      })
       try {
         const { data: res } = await login(this.user)
         console.log(res)
         console.log('登录成功')
-        /* this.$toast.sucess({
-          message: '登录成功',
-          position: 'top'
-        }) */
         this.$toast.success({
           message: '登录成功',
           position: 'top'
         })
+        // 将后端返回的用户数据(token)放到vuex容器中
         this.$store.commit('setUser', res.data)
+        // 登录成功，跳转回原来的页面
+        this.$router.back()
       } catch (error) {
         console.log('登录失败')
         this.$toast({
           message: '登录失败',
           position: 'top'
         })
-        // console.dir(error.response.status)
-        /* if (error.response.status === 400) {
-          console.log('登录失败', error)
-          this.$toast.fail({
-            message: '登录失败',
-            position: 'top'
-          })
-        } */
       }
     },
     onFailed (error) {
